@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Text, View, Button } from "react-native";
 import { Item, Picker, Toast } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import FormContainer from "../../../Shared/Form/FormContainer";
 import Input from "../../../Shared/Form/Input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AuthGlobal from "../../../Context/store/AuthGlobal";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
 
 import { connect } from "react-redux";
 
 const countries = require("../../../assets/data/countries.json");
 
 const Checkout = (props) => {
+  const context = useContext(AuthGlobal);
   const [orderItems, setOrderItems] = useState();
   const [address, setAddress] = useState();
   const [address2, setAddress2] = useState();
@@ -22,23 +26,31 @@ const Checkout = (props) => {
 
   useEffect(() => {
     setOrderItems(props.cartItems);
-
-    // if (context.stateUser.isAuthenticated) {
-    //   setUser(context.stateUser.user.sub);
-    // } else {
-    //   props.navigation.navigate("Cart");
-    //   Toast.show({
-    //     topOffset: 60,
-    //     type: "error",
-    //     text1: "Please Login to Checkout",
-    //     text2: "",
-    //   });
-    // }
+    if (context.stateUser.isAuthenticated) {
+      // console.log(context.stateUser.user.userId);
+      setUser(context.stateUser.user.userId);
+    } else {
+      props.navigation.navigate("Cart");
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: "Please Login to Checkout",
+        text2: "",
+      });
+    }
 
     return () => {
       setOrderItems();
     };
   }, []);
+  // useEffect(() => {
+  //   (async () =>
+  //     await Font.loadAsync({
+  //       Roboto: require("native-base/Fonts/Roboto.ttf"),
+  //       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+  //       ...Ionicons.font,
+  //     }))();
+  // }, []);
 
   const checkOut = () => {
     let order = {

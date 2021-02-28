@@ -53,8 +53,8 @@ export const logoutUser = (dispatch) => {
 };
 
 export const setCurrentUser = (decoded, user) => {
-  console.log(decoded);
-  console.log(user);
+  // console.log(decoded);
+  // console.log(user);
   return {
     type: SET_CURRENT_USER,
     payload: decoded,

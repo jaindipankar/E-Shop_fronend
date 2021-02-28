@@ -4,7 +4,7 @@ let baseURL = "";
 
 {
   Platform.OS == "android"
-    ? (baseURL = "http://a6a3ddbb5812.ngrok.io/api/v1/")
+    ? (baseURL = "http://8a4296829a5e.ngrok.io/api/v1/")
     : (baseURL = "http://localhost:3000/api/v1/");
 }
 

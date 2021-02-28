@@ -3,24 +3,51 @@ import { View, StyleSheet, Dimensions, ScrollView, Button } from "react-native";
 import { Text, Left, Right, ListItem, Thumbnail, Body } from "native-base";
 import { connect } from "react-redux";
 import * as actions from "../../../Redux/Actions/cartActions";
+
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import baseURL from "../../../assets/common/baseURL";
+
 var { width, height } = Dimensions.get("window");
+
 const Confirm = (props) => {
-  // console.log(props.route.params);
-  const confirmOrder = () => {
-    setTimeout(() => {
-      props.clearCart();
-      props.navigation.navigate("Cart");
-    });
-  };
   const finalOrder = props.route.params;
+
+  const confirmOrder = () => {
+    const order = finalOrder.order.order;
+    // console.log(order);
+    axios
+      .post(`${baseURL}orders`, order)
+      .then((res) => {
+        // console.log(res);
+        if (res.status == 200 || res.status == 201) {
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "Order Completed",
+            text2: "",
+          });
+          setTimeout(() => {
+            props.clearCart();
+            props.navigation.navigate("Cart");
+          }, 2500);
+        }
+      })
+      .catch((error) => {
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Something went wrong",
+          text2: "Please try again",
+        });
+      });
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Confirm Order</Text>
-        {finalOrder ? (
+        {props.route.params ? (
           <View style={{ borderWidth: 1, borderColor: "orange" }}>
             <Text style={styles.title}>Shipping to:</Text>
             <View style={{ padding: 8 }}>
@@ -30,10 +57,10 @@ const Confirm = (props) => {
               <Text>Zip Code: {finalOrder.order.order.zip}</Text>
               <Text>Country: {finalOrder.order.order.country}</Text>
             </View>
-            <Text style={styles.title}>Items: </Text>
+            <Text style={styles.title}>Items:</Text>
             {finalOrder.order.order.orderItems.map((x) => {
               return (
-                <ListItem style={styles.listItem} avatar key={x.product.name}>
+                <ListItem style={styles.listItem} key={x.product.name} avatar>
                   <Left>
                     <Thumbnail source={{ uri: x.product.image }} />
                   </Left>
@@ -42,7 +69,7 @@ const Confirm = (props) => {
                       <Text>{x.product.name}</Text>
                     </Left>
                     <Right>
-                      <Text>{x.product.price}</Text>
+                      <Text>$ {x.product.price}</Text>
                     </Right>
                   </Body>
                 </ListItem>
@@ -51,7 +78,7 @@ const Confirm = (props) => {
           </View>
         ) : null}
         <View style={{ alignItems: "center", margin: 20 }}>
-          <Button title="Place Order" onPress={confirmOrder} />
+          <Button title={"Place order"} onPress={confirmOrder} />
         </View>
       </View>
     </ScrollView>
@@ -64,12 +91,10 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Confirm);
-
 const styles = StyleSheet.create({
   container: {
     height: height,
-    padding: 15,
+    padding: 8,
     alignContent: "center",
     backgroundColor: "white",
   },
@@ -96,3 +121,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
+
+export default connect(null, mapDispatchToProps)(Confirm);
