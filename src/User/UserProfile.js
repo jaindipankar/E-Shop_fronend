@@ -41,7 +41,7 @@ const UserProfile = (props) => {
         .then((x) => {
           const data = x.data;
           const userOrders = data.filter(
-            (order) => order.user._id === context.stateUser.user.userId
+            (order) => order.user.id === context.stateUser.user.userId
           );
           setOrders(userOrders);
         })

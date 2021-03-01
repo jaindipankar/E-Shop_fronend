@@ -6,8 +6,8 @@ import FormContainer from "../../../Shared/Form/FormContainer";
 import Input from "../../../Shared/Form/Input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AuthGlobal from "../../../Context/store/AuthGlobal";
-import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
+import Error from "../../../Shared/Error";
+import EasyButton from "../../../Shared/StyledComponents/Easybutton";
 
 import { connect } from "react-redux";
 
@@ -23,6 +23,7 @@ const Checkout = (props) => {
   const [country, setCountry] = useState();
   const [phone, setPhone] = useState();
   const [user, setUser] = useState();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setOrderItems(props.cartItems);
@@ -43,30 +44,32 @@ const Checkout = (props) => {
       setOrderItems();
     };
   }, []);
-  // useEffect(() => {
-  //   (async () =>
-  //     await Font.loadAsync({
-  //       Roboto: require("native-base/Fonts/Roboto.ttf"),
-  //       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-  //       ...Ionicons.font,
-  //     }))();
-  // }, []);
-
   const checkOut = () => {
-    let order = {
-      city,
-      country,
-      dateOrdered: Date.now(),
-      orderItems,
-      phone,
-      shippingAddress1: address,
-      shippingAddress2: address2,
-      status: "3",
-      user,
-      zip,
-    };
+    if (
+      city === undefined ||
+      country === undefined ||
+      address === undefined ||
+      address2 === undefined ||
+      zip === undefined ||
+      phone === undefined
+    ) {
+      setError("All fields need to be filled");
+    } else {
+      let order = {
+        city,
+        country,
+        dateOrdered: Date.now(),
+        orderItems,
+        phone,
+        shippingAddress1: address,
+        shippingAddress2: address2,
+        status: "3",
+        user,
+        zip,
+      };
 
-    props.navigation.navigate("Payment", { order: order });
+      props.navigation.navigate("Payment", { order: order });
+    }
   };
 
   return (
@@ -124,8 +127,11 @@ const Checkout = (props) => {
             })}
           </Picker>
         </Item>
+        {error ? <Error message={error} /> : null}
         <View style={{ width: "80%", alignItems: "center" }}>
-          <Button title="Confirm" onPress={checkOut} />
+          <EasyButton large secondary onPress={checkOut}>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Confirm</Text>
+          </EasyButton>
         </View>
       </FormContainer>
     </KeyboardAwareScrollView>

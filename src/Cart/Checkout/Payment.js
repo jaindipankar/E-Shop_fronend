@@ -14,6 +14,7 @@ import {
   Body,
   Title,
 } from "native-base";
+import EasyButton from "../../../Shared/StyledComponents/Easybutton";
 
 const methods = [
   { name: "Cash on Delivery", value: 1 },
@@ -74,10 +75,13 @@ const Payment = (props) => {
           </View>
         ) : null}
         <View style={{ marginTop: 60, alignSelf: "center" }}>
-          <Button
-            title={"Confirm"}
+          <EasyButton
+            large
+            secondary
             onPress={() => props.navigation.navigate("Confirm", { order })}
-          />
+          >
+            <Text style={{ color: "white" }}>Confirm</Text>
+          </EasyButton>
         </View>
       </Content>
     </Container>

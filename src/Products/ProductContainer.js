@@ -89,7 +89,7 @@ const ProductContainer = (props) => {
       ctg === "all"
         ? [setProductsCtg(initialState), setActive(true)]
         : [
-            setProductsCtg(products.filter((i) => i.category._id === ctg)),
+            setProductsCtg(products.filter((i) => i.category.id === ctg)),
             setActive(true),
           ];
     }
@@ -120,7 +120,10 @@ const ProductContainer = (props) => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-                height: height / 1.3 + (height / 3) * (productsCtg.length / 2),
+                height:
+                  height / 1.3 +
+                  (height / 3.2) *
+                    (productsCtg.length / 2 + (productsCtg.length % 2)),
               }}
             >
               <View>

@@ -51,7 +51,7 @@ const ProductForm = (props) => {
       setDescription(props.route.params.item.description);
       setMainImage(props.route.params.item.image);
       setImage(props.route.params.item.image);
-      setCategory(props.route.params.item.category._id);
+      setCategory(props.route.params.item.category.id);
       setCountInStock(props.route.params.item.countInStock.toString());
     }
     AsyncStorage.getItem("jwt")
